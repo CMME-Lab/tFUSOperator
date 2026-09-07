@@ -85,6 +85,10 @@ def load_config():
                    help='Attention / MLP dropout')
     m.add_argument('--no_dit',        action='store_true', default=False,
                    help='Disable DiT conditioning entirely (unconditional baseline)')
+    m.add_argument('--coord_max_freq', type=float, default=200,
+                   help='Cap the TOP angular frequency of the coordinate Fourier PE '
+                        '(all coord PEs: encoder keys, decoder query, skull-read, '
+                        'intra-patch).')
     m.add_argument('--ct_stem_depth', type=int, default=0,
                    help='Deep local CT stem: # stride-1 ResBlocks before patch '
                         'tokenize (0 = plain PatchEmbed3D). RF = 3 + 4*depth voxels. '
@@ -97,7 +101,7 @@ def load_config():
     # ------------------------------------------------------------------
     c = parser.add_argument_group("conditioning")
     c.add_argument('--freq_range_hz', type=float, nargs=2,
-                   default=[200e3, 700e3],
+                   default=[200e3, 550e3],
                    help='Min/max frequency for normalization (Hz)')
     c.add_argument('--cond_dropout',  type=float, default=0.1,
                    help='Per-source null dropout (CFG-style)')

@@ -90,6 +90,7 @@ class TFUSOperator(nn.Module):
         cond_dropout: float = 0.1,
         # PE
         coord_pe_bands: int | None = None,
+        coord_max_freq: float | None = None,
         # CT stem
         ct_stem_depth: int = 0,
         ct_stem_channels: int = 64,
@@ -104,6 +105,7 @@ class TFUSOperator(nn.Module):
             mlp_ratio=mlp_ratio,
             dropout=dropout,
             coord_pe_bands=coord_pe_bands,
+            coord_max_freq=coord_max_freq,
             ct_stem_depth=ct_stem_depth,
             ct_stem_channels=ct_stem_channels,
         )
@@ -136,15 +138,8 @@ class TFUSOperator(nn.Module):
             mlp_ratio=mlp_ratio,
             dropout=dropout,
             coord_pe_bands=coord_pe_bands,
+            coord_max_freq=coord_max_freq,
         )
-
-        # self.refine = nn.Sequential(
-        #     nn.Conv3d(1, 16, kernel_size=3, padding=1),
-        #     nn.GELU(),
-        #     nn.Conv3d(16, 1, kernel_size=3, padding=1),
-        # )
-        # nn.init.zeros_(self.refine[-1].weight)
-        # nn.init.zeros_(self.refine[-1].bias)
 
         self.use_dit = use_dit
         self.embed_dim = embed_dim

@@ -347,6 +347,7 @@ class TFUSDualEncoder(nn.Module):
         mlp_ratio: float = 4.0,
         dropout: float = 0.0,
         coord_pe_bands: int | None = None,
+        coord_max_freq: float | None = None,
         ct_stem_depth: int = 0,
         ct_stem_channels: int = 64,
     ):
@@ -373,7 +374,8 @@ class TFUSDualEncoder(nn.Module):
             self.patch_embed_skull = PatchEmbed3D(1, embed_dim, patch_size)
 
         # Shared coord PE and coord MLP (identical semantics across modalities).
-        self.coord_pe = SinusoidalPE3D(embed_dim, num_bands=coord_pe_bands)
+        self.coord_pe = SinusoidalPE3D(embed_dim, num_bands=coord_pe_bands,
+                                       max_freq=coord_max_freq)
         self.coord_mlp = nn.Sequential(
             nn.Linear(embed_dim, embed_dim),
             nn.GELU(),

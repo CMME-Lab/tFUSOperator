@@ -221,6 +221,7 @@ class TFUSDecoder(nn.Module):
         dropout: float = 0.0,
         coord_pe_bands: int | None = None,
         intra_pe_bands: int | None = None,
+        coord_max_freq: float | None = None,
     ):
         super().__init__()
         if embed_dim % 6 != 0:
@@ -231,7 +232,8 @@ class TFUSDecoder(nn.Module):
         self.num_patches = Gx * Gy * Gz
 
         # Decoder owns its own coord PE + MLP, distinct from the encoder's.
-        self.coord_pe = SinusoidalPE3D(embed_dim, num_bands=coord_pe_bands)
+        self.coord_pe = SinusoidalPE3D(embed_dim, num_bands=coord_pe_bands,
+                                       max_freq=coord_max_freq)
         self.coord_mlp = nn.Sequential(
             nn.Linear(embed_dim, embed_dim),
             nn.GELU(),
@@ -250,7 +252,8 @@ class TFUSDecoder(nn.Module):
         # --- intra-patch coord-query head (replaces Linear(d, P^3)) ---
         # local coord -> PE -> MLP -> d-dim "basis" vector.
         # Then voxel value = <patch_token, basis(x_local)>.
-        self.intra_pe = SinusoidalPE3D(embed_dim, num_bands=intra_pe_bands)
+        self.intra_pe = SinusoidalPE3D(embed_dim, num_bands=intra_pe_bands,
+                                       max_freq=coord_max_freq)
         self.intra_mlp = nn.Sequential(
             nn.Linear(embed_dim, embed_dim),
             nn.GELU(),

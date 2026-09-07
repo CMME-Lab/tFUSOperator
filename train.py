@@ -131,6 +131,7 @@ def build_model(args) -> TFUSOperator:
         cond_sources=tuple(args.cond_sources),
         domain_size_mm=domain_size_mm,
         cond_dropout=args.cond_dropout,
+        coord_max_freq=args.coord_max_freq,
         ct_stem_depth=args.ct_stem_depth,
         ct_stem_channels=args.ct_stem_channels,
     )
